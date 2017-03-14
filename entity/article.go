@@ -24,4 +24,5 @@ type Article struct {
 }
 
 type ArticleRepository interface {
+	GetByUser(uid UserID) ([]*Article, error)
 }
