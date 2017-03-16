@@ -6,12 +6,14 @@ import (
 
 	"github.com/VitaliiHurin/go-newsfeed/api"
 	"github.com/VitaliiHurin/go-newsfeed/config"
+	"github.com/VitaliiHurin/go-newsfeed/repository"
 	"github.com/VitaliiHurin/go-newsfeed/server"
 	"github.com/VitaliiHurin/go-newsfeed/server/gin"
 )
 
 func main() {
 	config.ServerParams()
+	config.DBParams()
 	config.Load()
 
 	if *config.ServerHTTPAddr == "" {
@@ -27,6 +29,13 @@ func main() {
 		mode = server.ModeDebug
 	}
 
-	a := &api.API{}
+	articles := repository.NewArticleRepository(config.DB)
+	users := repository.NewUserRepository(config.DB)
+	tags := repository.NewTagRepository(config.DB)
+	services := repository.NewServiceRepository(config.DB)
+	userTags := repository.NewUserTagRepository(config.DB)
+	articleTags := repository.NewArticleTagRepository(config.DB)
+
+	a := api.New(articles, articleTags, services, tags, users, userTags)
 	gin.New(mode, a).Run(*config.ServerHTTPAddr)
 }

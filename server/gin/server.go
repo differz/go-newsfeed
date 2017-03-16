@@ -45,7 +45,7 @@ func New(mode server.Mode, a *api.API) server.NewsfeedServer {
 
 	g.GET("/services", handleGetServices(a))
 
-	g.GET("/registration", handleGetRegistration(a))
+	g.POST("/registration", handlePostRegistration(a))
 	g.GET("/logout", handleGetLogout(a))
 	g.GET("/user/tags", handleGetUserTags(a))
 	g.POST("/user/tags", handlePostUserTags(a))

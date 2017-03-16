@@ -3,5 +3,9 @@ package api
 import "github.com/VitaliiHurin/go-newsfeed/entity"
 
 func (a *API) DeleteUserTag(user *entity.User, tag string) error {
-	return nil
+	tagEntity, err := a.tags.GetByName(tag)
+	if err != nil {
+		return err
+	}
+	return a.userTags.RemoveTagFromUser(user, tagEntity)
 }

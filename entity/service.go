@@ -13,4 +13,5 @@ type Service struct {
 }
 
 type ServiceRepository interface {
+	GetAll() ([]*Service, error)
 }

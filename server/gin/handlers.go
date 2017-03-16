@@ -8,6 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type RegistrationRequest struct {
+	name string `form:"name" binding:required`
+}
+
 func auth(a *api.API, c *gin.Context) (*entity.User, error) {
 	token := c.Request.Header.Get("session")
 	if token == "" {
@@ -32,10 +36,15 @@ func handleGetServices(a *api.API) gin.HandlerFunc {
 	}
 }
 
-func handleGetRegistration(a *api.API) gin.HandlerFunc {
+func handlePostRegistration(a *api.API) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, _ := auth(a, c)
-		token, err := a.Register(user)
+		var request RegistrationRequest
+		err := c.Bind(&request)
+		if err != nil {
+			c.Error(err)
+			return
+		}
+		token, err := a.Register(request.name)
 		if err != nil {
 			c.Error(err)
 			return

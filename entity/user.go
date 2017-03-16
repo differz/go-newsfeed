@@ -11,4 +11,5 @@ type User struct {
 }
 
 type UserRepository interface {
+	GetByToken(token UserToken) (*User, error)
 }
