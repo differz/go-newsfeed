@@ -6,9 +6,8 @@ import (
 )
 
 type articleTagTable struct {
-	ArticleID int64     `db:"articleID,omitempty"`
-	TagID     int64    `db:"tagID,omitempty"`
-
+	ArticleID int64 `db:"articleID,omitempty"`
+	TagID     int64 `db:"tagID,omitempty"`
 }
 
 func assembleArticleTag(t *articleTagTable) *entity.ArticleTag {

@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"github.com/VitaliiHurin/go-newsfeed/entity"
-	"upper.io/db.v3/lib/sqlbuilder"
-	"upper.io/db.v3"
 	"errors"
+
+	"github.com/VitaliiHurin/go-newsfeed/entity"
+	"upper.io/db.v3"
+	"upper.io/db.v3/lib/sqlbuilder"
 )
 
 type userTable struct {
