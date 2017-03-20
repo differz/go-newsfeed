@@ -9,8 +9,8 @@ import (
 )
 
 type userTable struct {
-	ID    int64     `db:"id,omitempty"`
-	Token string    `db:"token"`
+	ID    int64  `db:"id,omitempty"`
+	Token string `db:"token"`
 }
 
 func assembleUser(t *userTable) *entity.User {
@@ -28,17 +28,17 @@ func newUserTable(r *entity.User) *userTable {
 }
 
 type userRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewUserRepository(DB *sqlbuilder.Database) entity.UserRepository {
+func NewUserRepository(DB sqlbuilder.Database) entity.UserRepository {
 	return &userRepository{
 		DB: DB,
 	}
 }
 
 func (r *userRepository) GetByToken(token entity.UserToken) (*entity.User, error) {
-	res := (*r.DB).Collection("user").Find(db.Cond{
+	res := r.DB.Collection("user").Find(db.Cond{
 		"token": token,
 	})
 	c, err := res.Count()

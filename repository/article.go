@@ -45,10 +45,10 @@ func newArticleTable(r *entity.Article) *articleTable {
 }
 
 type articleRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewArticleRepository(DB *sqlbuilder.Database) entity.ArticleRepository {
+func NewArticleRepository(DB sqlbuilder.Database) entity.ArticleRepository {
 	return &articleRepository{
 		DB: DB,
 	}

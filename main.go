@@ -14,15 +14,14 @@ import (
 func main() {
 	config.ServerParams()
 	config.DBParams()
-	config.Load()
 
-	if *config.ServerHTTPAddr == "" {
+	if config.ServerHTTPPort == "" {
 		fmt.Println("ERR - HTTP port is not defined.")
 		os.Exit(1)
 	}
 
 	var mode server.Mode
-	switch *config.ServerMode {
+	switch config.ServerMode {
 	case "release":
 		mode = server.ModeRelease
 	default:
@@ -37,5 +36,5 @@ func main() {
 	articleTags := repository.NewArticleTagRepository(config.DB)
 
 	a := api.New(articles, articleTags, services, tags, users, userTags)
-	gin.New(mode, a).Run(*config.ServerHTTPAddr)
+	gin.New(mode, a).Run(":"+config.ServerHTTPPort)
 }

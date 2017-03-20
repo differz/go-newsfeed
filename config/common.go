@@ -1,14 +1,9 @@
 package config
 
 import (
-	"flag"
 	"os"
 	"strconv"
 )
-
-func Load() {
-	flag.Parse()
-}
 
 func envString(env string, fallback string) string {
 	e := os.Getenv(env)

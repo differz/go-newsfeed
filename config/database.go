@@ -1,19 +1,15 @@
 package config
 
 import (
-	"flag"
 	"log"
-
 	"upper.io/db.v3/lib/sqlbuilder"
 	"upper.io/db.v3/sqlite"
 )
 
-var DBFile *string
-var DB *sqlbuilder.Database
+var DB sqlbuilder.Database
 
 func DBParams() {
 	envDBFile := envString("DB_FILE", "")
-	DBFile = flag.String("db.file", envDBFile, "SQLite db file")
 
 	setting := sqlite.ConnectionURL{
 		Database: envDBFile,
@@ -24,6 +20,6 @@ func DBParams() {
 		log.Panic(err)
 	}
 	if db != nil {
-		DB = &db
+		DB = db
 	}
 }

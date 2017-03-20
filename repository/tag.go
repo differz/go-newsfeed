@@ -8,8 +8,8 @@ import (
 )
 
 type tagTable struct {
-	ID   int64     `db:"id,omitempty"`
-	Name string    `db:"name"`
+	ID   int64  `db:"id,omitempty"`
+	Name string `db:"name"`
 }
 
 func assembleTag(t *tagTable) *entity.Tag {
@@ -27,10 +27,10 @@ func newTagTable(r *entity.Tag) *tagTable {
 }
 
 type tagRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewTagRepository(DB *sqlbuilder.Database) entity.TagRepository {
+func NewTagRepository(DB sqlbuilder.Database) entity.TagRepository {
 	return &tagRepository{
 		DB: DB,
 	}
@@ -40,7 +40,7 @@ func (r *tagRepository) GetByUser(uid int64) ([]*entity.Tag, error) {
 	if uid <= 0 {
 		return nil, errors.New("Invalid argument")
 	}
-	q := (*r.DB).Select("t.id", "t.name").
+	q := r.DB.Select("t.id", "t.name").
 		From("tag AS t", "user_tag_relation AS ut").
 		Where("t.id = ut.tagID and ut.userID = ?", uid)
 	var rows []tagTable
@@ -59,7 +59,7 @@ func (r *tagRepository) GetByUser(uid int64) ([]*entity.Tag, error) {
 }
 
 func (r *tagRepository) GetByName(name string) (*entity.Tag, error) {
-	res := (*r.DB).Collection("tag").Find("name", name)
+	res := r.DB.Collection("tag").Find("name", name)
 	var t tagTable
 	err := res.One(&t)
 	if err != nil {
@@ -69,7 +69,7 @@ func (r *tagRepository) GetByName(name string) (*entity.Tag, error) {
 }
 
 func (r *tagRepository) StoreTag(tag *entity.Tag) error {
-	id, err := (*r.DB).Collection("tag").Insert(newTagTable(tag))
+	id, err := r.DB.Collection("tag").Insert(newTagTable(tag))
 	if err != nil {
 		return err
 	}

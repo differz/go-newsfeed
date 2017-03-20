@@ -26,17 +26,17 @@ func newUserTagTable(r *entity.UserTag) *userTagTable {
 }
 
 type userTagRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewUserTagRepository(DB *sqlbuilder.Database) entity.UserTagRepository {
+func NewUserTagRepository(DB sqlbuilder.Database) entity.UserTagRepository {
 	return &userTagRepository{
 		DB: DB,
 	}
 }
 
 func (r *userTagRepository) IsUserHasTag(user *entity.User, tag *entity.Tag) (bool, error) {
-	res := (*r.DB).Collection("user_tag_relation").Find(db.Cond{
+	res := r.DB.Collection("user_tag_relation").Find(db.Cond{
 		"userID": user.ID,
 		"tagID":  tag.ID,
 	})
@@ -51,7 +51,7 @@ func (r *userTagRepository) IsUserHasTag(user *entity.User, tag *entity.Tag) (bo
 }
 
 func (r *userTagRepository) Store(userTag *entity.UserTag) error {
-	_, err := (*r.DB).Collection("user_tag_relation").Insert(newUserTagTable(userTag))
+	_, err := r.DB.Collection("user_tag_relation").Insert(newUserTagTable(userTag))
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (r *userTagRepository) Store(userTag *entity.UserTag) error {
 }
 
 func (r *userTagRepository) RemoveTagFromUser(user *entity.User, tag *entity.Tag) error {
-	q := (*r.DB).DeleteFrom("user_tag_relation").Where(db.Cond{
+	q := r.DB.DeleteFrom("user_tag_relation").Where(db.Cond{
 		"userId": user.ID,
 		"tagID":  tag.ID,
 	})

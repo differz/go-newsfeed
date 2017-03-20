@@ -25,10 +25,10 @@ func newArticleTagTable(r *entity.ArticleTag) *articleTagTable {
 }
 
 type articleTagRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewArticleTagRepository(DB *sqlbuilder.Database) entity.ArticleTagRepository {
+func NewArticleTagRepository(DB sqlbuilder.Database) entity.ArticleTagRepository {
 	return &articleTagRepository{
 		DB: DB,
 	}

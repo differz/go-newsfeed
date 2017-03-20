@@ -28,10 +28,10 @@ func newServiceTable(r *entity.Service) *serviceTable {
 }
 
 type serviceRepository struct {
-	DB *sqlbuilder.Database
+	DB sqlbuilder.Database
 }
 
-func NewServiceRepository(DB *sqlbuilder.Database) entity.ServiceRepository {
+func NewServiceRepository(DB sqlbuilder.Database) entity.ServiceRepository {
 	return &serviceRepository{
 		DB: DB,
 	}
@@ -39,7 +39,7 @@ func NewServiceRepository(DB *sqlbuilder.Database) entity.ServiceRepository {
 
 func (r *serviceRepository) GetAll() ([]*entity.Service, error) {
 	var s []*serviceTable
-	res := (*r.DB).Collection("service").Find()
+	res := r.DB.Collection("service").Find()
 	err := res.All(&s)
 	if err != nil {
 		return nil, err
