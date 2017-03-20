@@ -36,7 +36,7 @@ func NewTagRepository(DB sqlbuilder.Database) entity.TagRepository {
 	}
 }
 
-func (r *tagRepository) GetByUser(uid int64) ([]*entity.Tag, error) {
+func (r *tagRepository) GetByUser(uid entity.UserID) ([]*entity.Tag, error) {
 	if uid <= 0 {
 		return nil, errors.New("Invalid argument")
 	}
@@ -58,7 +58,7 @@ func (r *tagRepository) GetByUser(uid int64) ([]*entity.Tag, error) {
 	return tags, nil
 }
 
-func (r *tagRepository) GetByName(name string) (*entity.Tag, error) {
+func (r *tagRepository) GetByName(name entity.TagName) (*entity.Tag, error) {
 	res := r.DB.Collection("tag").Find("name", name)
 	var t tagTable
 	err := res.One(&t)
@@ -68,7 +68,7 @@ func (r *tagRepository) GetByName(name string) (*entity.Tag, error) {
 	return assembleTag(&t), nil
 }
 
-func (r *tagRepository) StoreTag(tag *entity.Tag) error {
+func (r *tagRepository) Store(tag *entity.Tag) error {
 	id, err := r.DB.Collection("tag").Insert(newTagTable(tag))
 	if err != nil {
 		return err

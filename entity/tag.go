@@ -11,7 +11,7 @@ type Tag struct {
 }
 
 type TagRepository interface {
-	GetByUser(uid int64) ([]*Tag, error)
-	GetByName(name string) (*Tag, error)
-	StoreTag(tag *Tag) error
+	GetByUser(uid UserID) ([]*Tag, error)
+	GetByName(name TagName) (*Tag, error)
+	Store(tag *Tag) error
 }
