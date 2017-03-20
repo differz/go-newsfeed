@@ -13,7 +13,7 @@ var DB *sqlbuilder.Database
 
 func DBParams() {
 	envDBFile := envString("DB_FILE", "")
-	DBFile = flag.String("db.file", ":"+envDBFile, "SQLite db file")
+	DBFile = flag.String("db.file", envDBFile, "SQLite db file")
 
 	setting := sqlite.ConnectionURL{
 		Database: envDBFile,
