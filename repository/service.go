@@ -6,9 +6,9 @@ import (
 )
 
 type serviceTable struct {
-	ID   int64     `db:"id,omitempty"`
-	Name string    `db:"name"`
-	Host string    `db:"host"`
+	ID   int64  `db:"id,omitempty"`
+	Name string `db:"name"`
+	Host string `db:"host"`
 }
 
 func assembleService(t *serviceTable) *entity.Service {
@@ -48,5 +48,6 @@ func (r *serviceRepository) GetAll() ([]*entity.Service, error) {
 	for _, v := range s {
 		services = append(services, assembleService(v))
 	}
+
 	return services, nil
 }
