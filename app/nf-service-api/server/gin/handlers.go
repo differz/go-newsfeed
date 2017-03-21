@@ -3,7 +3,7 @@ package gin
 import (
 	"strconv"
 
-	"github.com/VitaliiHurin/go-newsfeed/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
 	"github.com/VitaliiHurin/go-newsfeed/entity"
 	"github.com/gin-gonic/gin"
 )

@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/VitaliiHurin/go-newsfeed/api"
-	"github.com/VitaliiHurin/go-newsfeed/server"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server"
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
 )

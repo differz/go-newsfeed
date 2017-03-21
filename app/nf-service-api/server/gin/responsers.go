@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"net/http"
 
-	"github.com/VitaliiHurin/go-newsfeed/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
 	"github.com/gin-gonic/gin"
 )
 

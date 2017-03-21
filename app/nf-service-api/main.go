@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/VitaliiHurin/go-newsfeed/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server/gin"
 	"github.com/VitaliiHurin/go-newsfeed/config"
 	"github.com/VitaliiHurin/go-newsfeed/repository"
-	"github.com/VitaliiHurin/go-newsfeed/server"
-	"github.com/VitaliiHurin/go-newsfeed/server/gin"
 )
 
 func main() {
