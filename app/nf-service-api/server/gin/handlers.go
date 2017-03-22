@@ -4,20 +4,33 @@ import (
 	"strconv"
 
 	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/security"
 	"github.com/VitaliiHurin/go-newsfeed/entity"
 	"github.com/gin-gonic/gin"
 )
 
 type RegistrationRequest struct {
-	name string `form:"name" binding:required`
+	email    string `form:"email" binding:required`
+	password string `form:"password" binding:required`
 }
 
 func auth(a *api.API, c *gin.Context) (*entity.User, error) {
-	token := c.Request.Header.Get("session")
-	if token == "" {
-		return nil, api.ErrUnauthorized
+	wsse := c.Request.Header.Get("X-WSSE")
+	token, err := security.ParseToken(wsse)
+	if err != nil {
+		return nil, err
 	}
-	return a.GetUser(token)
+	user, err := a.GetUser(token.Username)
+	if err != nil {
+		return nil, err
+	}
+	err = a.SecurityManager.ValidateWSSEToken(token, string(user.Password))
+	if err != nil {
+		c.Error(err)
+		return nil, err
+	}
+	c.Header("X-WSSE", token.ToString())
+	return user, nil
 }
 
 func handleGetServices(a *api.API) gin.HandlerFunc {
@@ -38,19 +51,23 @@ func handleGetServices(a *api.API) gin.HandlerFunc {
 
 func handlePostRegistration(a *api.API) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var request RegistrationRequest
-		err := c.Bind(&request)
+		email, ok := c.GetPostForm("email")
+		if !ok {
+			c.Error(api.ErrInvalidArgument)
+		}
+		password, ok := c.GetPostForm("password")
+		if !ok {
+			c.Error(api.ErrInvalidArgument)
+		}
+
+		user, err := a.Register(email, password)
 		if err != nil {
 			c.Error(err)
 			return
 		}
-		token, err := a.Register(request.name)
-		if err != nil {
-			c.Error(err)
-			return
-		}
+		c.Header("X-WSSE", a.SecurityManager.CreateWSSEToken(string(user.Email), string(user.Password)).ToString())
 		responseSuccess(c, gin.H{
-			"token": token,
+			"token": user.Token,
 		})
 	}
 }

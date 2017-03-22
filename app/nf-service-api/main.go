@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/security"
 	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server"
 	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server/gin"
 	"github.com/VitaliiHurin/go-newsfeed/config"
@@ -35,6 +36,8 @@ func main() {
 	userTags := repository.NewUserTagRepository(config.DB)
 	articleTags := repository.NewArticleTagRepository(config.DB)
 
-	a := api.New(articles, articleTags, services, tags, users, userTags)
+	sManager := security.NewSecurityManager("secretphrase", 600)
+
+	a := api.New(articles, articleTags, services, tags, users, userTags, sManager)
 	gin.New(mode, a).Run(":"+config.ServerHTTPPort)
 }

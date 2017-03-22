@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	ErrInvalidArgument = errors.New("invalid argument")
-	ErrNotFound        = errors.New("not found")
-	ErrUnauthorized    = errors.New("unauthorized")
+	ErrInvalidArgument  = errors.New("invalid argument")
+	ErrNotFound         = errors.New("not found")
+	ErrUnauthorized     = errors.New("unauthorized")
+	ErrUserAlreadyExist = errors.New("User with this email already exist")
 )
 
 func HTTPStatusCodeByError(err error) int {
