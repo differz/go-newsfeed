@@ -45,13 +45,13 @@ func (r *userRepository) GetByToken(token entity.UserToken) (*entity.User, error
 	if err != nil {
 		return nil, err
 	}
-	if c > 0 {
-		var user userTable
-		err = res.One(&user)
-		if err != nil {
-			return nil, err
-		}
-		return assembleUser(&user), nil
+	if c == 0 {
+		return nil, errors.New("User not exist")
 	}
-	return nil, errors.New("User not exist")
+	var user userTable
+	err = res.One(&user)
+	if err != nil {
+		return nil, err
+	}
+	return assembleUser(&user), nil
 }

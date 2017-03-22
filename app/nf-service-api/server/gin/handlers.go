@@ -143,7 +143,7 @@ func handleGetArticles(a *api.API) gin.HandlerFunc {
 
 func handleGetArticleMarkAsRead(a *api.API) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, err := auth(a, c)
+		_, err := auth(a, c)
 		if err != nil {
 			c.Error(api.ErrUnauthorized)
 			return
@@ -153,7 +153,7 @@ func handleGetArticleMarkAsRead(a *api.API) gin.HandlerFunc {
 			c.Error(api.ErrInvalidArgument)
 			return
 		}
-		err = a.MarkArticleAsRead(user, entity.ArticleID(id))
+		err = a.MarkArticleAsRead(entity.ArticleID(id))
 		if err != nil {
 			c.Error(err)
 			return
@@ -165,7 +165,7 @@ func handleGetArticleMarkAsRead(a *api.API) gin.HandlerFunc {
 
 func handleGetArticleMarkAsUnread(a *api.API) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, err := auth(a, c)
+		_, err := auth(a, c)
 		if err != nil {
 			c.Error(api.ErrUnauthorized)
 			return
@@ -175,7 +175,7 @@ func handleGetArticleMarkAsUnread(a *api.API) gin.HandlerFunc {
 			c.Error(api.ErrInvalidArgument)
 			return
 		}
-		err = a.MarkArticleAsUnread(user, entity.ArticleID(id))
+		err = a.MarkArticleAsUnread(entity.ArticleID(id))
 		if err != nil {
 			c.Error(err)
 			return

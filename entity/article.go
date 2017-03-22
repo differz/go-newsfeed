@@ -25,4 +25,7 @@ type Article struct {
 
 type ArticleRepository interface {
 	GetByUser(uid UserID) ([]*Article, error)
+	GetByTag(tid TagID) ([]*Article, error)
+	Store(a *Article) error
+	ChangeIsRead(aid ArticleID, isRead ArticleIsRead) error
 }
