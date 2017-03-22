@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
 	"github.com/VitaliiHurin/go-newsfeed/entity"
@@ -55,5 +56,67 @@ func NewArticleRepository(DB sqlbuilder.Database) entity.ArticleRepository {
 }
 
 func (r *articleRepository) GetByUser(uid entity.UserID) ([]*entity.Article, error) {
-	return nil, nil
+	if uid <= 0 {
+		return nil, errors.New("Invalid argument")
+	}
+	q := r.DB.
+		Select("a.*").
+		From("article a").
+		Join("article_tag_relation at").
+		On("at.articleID = a.id").
+		Join("user_tag_relation ut").
+		On("ut.tagID = at.tagID").
+		Where("ut.userID = ?", uid).
+		OrderBy("a.dateIndexed desc")
+	var rows []articleTable
+	err := q.All(&rows)
+	if err != nil {
+		return nil, err
+	}
+	var articles []*entity.Article
+	for _, v := range rows {
+		articles = append(articles, assembleArticle(&v))
+	}
+	if articles == nil {
+		articles = []*entity.Article{}
+	}
+	return articles, nil
+}
+
+func (r *articleRepository) GetByTag(tid entity.TagID) ([]*entity.Article, error) {
+	if tid <= 0 {
+		return nil, errors.New("Invalid argument")
+	}
+	q := r.DB.
+		Select("a.*").
+		From("article a", "article_tag_relation at").
+		Where("a.id = at.articleID and at.tagID = ?", tid)
+	var rows []articleTable
+	err := q.All(&rows)
+	if err != nil {
+		return nil, err
+	}
+	var articles []*entity.Article
+	for _, v := range rows {
+		articles = append(articles, assembleArticle(&v))
+	}
+	if articles == nil {
+		articles = []*entity.Article{}
+	}
+	return articles, nil
+}
+
+func (r *articleRepository) Store(a *entity.Article) error {
+	id, err := r.DB.Collection("article").Insert(newArticleTable(a))
+	if err != nil {
+		return err
+	}
+	a.ID = entity.ArticleID(id.(int64))
+	return nil
+}
+
+func (r *articleRepository) ChangeIsRead(aid entity.ArticleID, isRead entity.ArticleIsRead) error {
+	return r.DB.Collection("article").Find("id", aid).Update(map[string]interface{}{
+		"isRead": isRead,
+	})
 }

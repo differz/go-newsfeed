@@ -13,10 +13,10 @@ var (
 )
 
 func HTTPStatusCodeByError(err error) int {
-	switch err {
-	case ErrNotFound:
+	switch err.Error() {
+	case ErrNotFound.Error():
 		return http.StatusNotFound
-	case ErrUnauthorized:
+	case ErrUnauthorized.Error():
 		return http.StatusUnauthorized
 	default:
 		return http.StatusInternalServerError
