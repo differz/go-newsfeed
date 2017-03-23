@@ -60,11 +60,11 @@ func (r *articleRepository) GetByUser(uid entity.UserID) ([]*entity.Article, err
 		return nil, errors.New("Invalid argument")
 	}
 	q := r.DB.
-		Select("a.*").
-		From("article a").
-		Join("article_tag_relation at").
+		Select("a.id", "a.title", "a.description", "a.url", "a.dateCreated", "a.dateIndexed", "a.isRead", "a.serverID").
+		From("article as a").
+		Join("article_tag_relation as at").
 		On("at.articleID = a.id").
-		Join("user_tag_relation ut").
+		Join("user_tag_relation as ut").
 		On("ut.tagID = at.tagID").
 		Where("ut.userID = ?", uid).
 		OrderBy("a.dateIndexed desc")
