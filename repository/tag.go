@@ -68,11 +68,11 @@ func (r *tagRepository) GetByName(name entity.TagName) (*entity.Tag, error) {
 	return assembleTag(&t), nil
 }
 
-func (r *tagRepository) Store(tag *entity.Tag) error {
+func (r *tagRepository) Store(tag *entity.Tag) (*entity.Tag, error) {
 	id, err := r.DB.Collection("tag").Insert(newTagTable(tag))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	tag.ID = entity.TagID(id.(int64))
-	return nil
+	return tag, nil
 }

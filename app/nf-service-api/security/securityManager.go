@@ -88,7 +88,6 @@ func (m *SecurityManager) createPasswordDigest(nonce, created, password string) 
 
 func (m *SecurityManager) ValidateWSSEToken(token *WSSEToken, password string) error {
 	now := time.Now()
-	println(token.Created.Add(time.Duration(m.tokenLifetime) * time.Second).Format("2006-01-02T15:04:05Z"))
 	if token.Created.Add(time.Duration(m.tokenLifetime) * time.Second).Before(now) {
 		return ErrWSSETokenExpired
 	}

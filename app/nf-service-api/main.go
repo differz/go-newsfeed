@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
-	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/security"
-	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server"
-	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server/gin"
 	"github.com/VitaliiHurin/go-newsfeed/config"
 	"github.com/VitaliiHurin/go-newsfeed/repository"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/security"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/api"
+	"github.com/VitaliiHurin/go-newsfeed/app/nf-service-api/server/gin"
 )
 
 func main() {
@@ -30,6 +30,7 @@ func main() {
 	}
 
 	articles := repository.NewArticleRepository(config.DB)
+
 	users := repository.NewUserRepository(config.DB)
 	tags := repository.NewTagRepository(config.DB)
 	services := repository.NewServiceRepository(config.DB)

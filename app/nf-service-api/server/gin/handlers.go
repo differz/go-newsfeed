@@ -208,7 +208,8 @@ func handlePostRestoreToken(a *api.API) gin.HandlerFunc {
 			c.Error(api.ErrUnauthorized)
 			return
 		}
-		err = a.RestoreToken(user)
+		token, _ := c.GetPostForm("token")
+		err = a.RestoreToken(user, token)
 		if err != nil {
 			c.Error(err)
 			return

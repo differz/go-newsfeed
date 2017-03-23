@@ -6,6 +6,8 @@ import (
 
 	"github.com/VitaliiHurin/go-newsfeed/entity"
 	"upper.io/db.v3/lib/sqlbuilder"
+	"fmt"
+	"log"
 )
 
 type articleTable struct {
@@ -13,8 +15,8 @@ type articleTable struct {
 	Title       string    `db:"title"`
 	Description string    `db:"description"`
 	URL         string    `db:"url"`
-	DateCreated time.Time `db:"dateCreated"`
-	DateIndexed time.Time `db:"dateIndexed"`
+	DateCreated int64     `db:"dateCreated"`
+	DateIndexed int64     `db:"dateIndexed"`
 	IsRead      bool      `db:"isRead"`
 	ServiceID   int64     `db:"serverID"`
 }
@@ -25,8 +27,8 @@ func assembleArticle(t *articleTable) *entity.Article {
 		Title:       entity.ArticleTitle(t.Title),
 		Description: entity.ArticleDescription(t.Description),
 		URL:         entity.ArticleURL(t.URL),
-		DateCreated: entity.ArticleDateCreated(t.DateCreated),
-		DateIndexed: entity.ArticleDateIndexed(t.DateIndexed),
+		DateCreated: entity.ArticleDateCreated(time.Unix(t.DateCreated, 0)),
+		DateIndexed: entity.ArticleDateIndexed(time.Unix(t.DateIndexed, 0)),
 		IsRead:      entity.ArticleIsRead(t.IsRead),
 		ServiceID:   entity.ServiceID(t.ServiceID),
 	}
@@ -38,8 +40,8 @@ func newArticleTable(r *entity.Article) *articleTable {
 		Title:       string(r.Title),
 		Description: string(r.Description),
 		URL:         string(r.URL),
-		DateCreated: time.Time(r.DateCreated),
-		DateIndexed: time.Time(r.DateIndexed),
+		DateCreated: time.Time(r.DateCreated).Unix(),
+		DateIndexed: time.Time(r.DateIndexed).Unix(),
 		IsRead:      bool(r.IsRead),
 		ServiceID:   int64(r.ServiceID),
 	}
@@ -119,4 +121,21 @@ func (r *articleRepository) ChangeIsRead(aid entity.ArticleID, isRead entity.Art
 	return r.DB.Collection("article").Find("id", aid).Update(map[string]interface{}{
 		"isRead": isRead,
 	})
+}
+
+func (r *articleRepository) GetAll(){
+	var birthdays []articleTable
+
+	err := r.DB.Collection("article").Find().All(&birthdays)
+	if err != nil {
+		log.Panic("res.All(): %q\n", err)
+	}
+
+	// Printing to stdout.
+	for _, birthday := range birthdays {
+		fmt.Printf("%s was born in %s.\n",
+			birthday.Title,
+			time.Unix(birthday.DateCreated, 0).Format("January 2, 2006"),
+		)
+	}
 }

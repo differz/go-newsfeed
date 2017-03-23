@@ -13,7 +13,7 @@ func (a *API) AddUserTag(user *entity.User, tag string) error {
 			t = &entity.Tag{
 				Name: tagName,
 			}
-			err := a.tags.Store(t)
+			t, err = a.tags.Store(t)
 			if err != nil {
 				return err
 			}

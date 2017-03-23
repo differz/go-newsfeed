@@ -5,7 +5,6 @@ import (
 )
 
 func (a *API) Register(email string, password string) (*entity.User, error) {
-	println(email)
 	u, err := a.users.GetByEmail(entity.UserEmail(email))
 	if err != nil && err != ErrNotFound {
 		return nil, err
@@ -31,7 +30,6 @@ func (a *API) Register(email string, password string) (*entity.User, error) {
 		Password: entity.UserPassword(pass),
 		Token: entity.UserToken(token),
 	}
-	println(u.Email)
 	err = a.users.Store(u)
 	if err != nil {
 		return nil, err

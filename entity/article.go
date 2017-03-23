@@ -28,4 +28,5 @@ type ArticleRepository interface {
 	GetByTag(tid TagID) ([]*Article, error)
 	Store(a *Article) error
 	ChangeIsRead(aid ArticleID, isRead ArticleIsRead) error
+	GetAll()
 }
