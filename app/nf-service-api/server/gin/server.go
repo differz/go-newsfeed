@@ -46,8 +46,8 @@ func New(mode server.Mode, a *api.API) server.NewsfeedServer {
 	g.GET("/services", handleGetServices(a))
 
 	g.POST("/registration", handlePostRegistration(a))
-	//g.POST("/login", handlePostLogin(a))
-	//g.POST("/restore-token", handlePostRestoreToken(a))
+	g.POST("/login", handlePostLogin(a))
+	g.POST("/restore-token", handlePostRestoreToken(a))
 	g.GET("/user/tags", handleGetUserTags(a))
 	g.POST("/user/tags", handlePostUserTags(a))
 	g.DELETE("/user/tags", handleDeleteUserTags(a))

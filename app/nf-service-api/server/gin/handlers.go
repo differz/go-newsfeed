@@ -27,7 +27,7 @@ func auth(a *api.API, c *gin.Context) (*entity.User, error) {
 	err = a.SecurityManager.ValidateWSSEToken(token, string(user.Password))
 	if err != nil {
 		c.Error(err)
-		return nil, err
+		return user, err
 	}
 	c.Header("X-WSSE", token.ToString())
 	return user, nil
@@ -198,5 +198,51 @@ func handleGetArticleMarkAsUnread(a *api.API) gin.HandlerFunc {
 			return
 		}
 		responseSuccess(c, nil)
+	}
+}
+
+func handlePostRestoreToken(a *api.API) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, err := auth(a, c)
+		if err != nil && err != security.ErrWSSETokenExpired{
+			c.Error(api.ErrUnauthorized)
+			return
+		}
+		err = a.RestoreToken(user)
+		if err != nil {
+			c.Error(err)
+			return
+		}
+		c.Header("X-WSSE", a.SecurityManager.CreateWSSEToken(string(user.Email), string(user.Password)).ToString())
+		responseSuccess(c, gin.H{
+			"token": user.Token,
+		})
+	}
+}
+
+func handlePostLogin(a *api.API) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		email, ok := c.GetPostForm("email")
+		if !ok {
+			c.Error(api.ErrInvalidArgument)
+		}
+		password, ok := c.GetPostForm("password")
+		if !ok {
+			c.Error(api.ErrInvalidArgument)
+		}
+		user, err := a.GetUser(email)
+		if err != nil {
+			c.Error(err)
+			return
+		}
+		err = a.SecurityManager.ValidatePassword(string(user.Password), string(user.Salt), password)
+		if err != nil {
+			c.Error(api.ErrUnauthorized)
+			return
+		}
+		c.Header("X-WSSE", a.SecurityManager.CreateWSSEToken(string(user.Email), string(user.Password)).ToString())
+		responseSuccess(c, gin.H{
+			"token": user.Token,
+		})
 	}
 }

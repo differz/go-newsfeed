@@ -99,3 +99,7 @@ func (m *SecurityManager) ValidateWSSEToken(token *WSSEToken, password string) e
 	}
 	return ErrWSSETokenInvalid
 }
+
+func (m *SecurityManager) ValidatePassword(passwordHash string, salt string, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password + salt + m.secret))
+}
