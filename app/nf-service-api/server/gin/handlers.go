@@ -9,11 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type RegistrationRequest struct {
-	email    string `form:"email" binding:required`
-	password string `form:"password" binding:required`
-}
-
 func auth(a *api.API, c *gin.Context) (*entity.User, error) {
 	wsse := c.Request.Header.Get("X-WSSE")
 	token, err := security.ParseToken(wsse)
@@ -72,17 +67,6 @@ func handlePostRegistration(a *api.API) gin.HandlerFunc {
 	}
 }
 
-func handleGetLogout(a *api.API) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		user, _ := auth(a, c)
-		err := a.Logout(user)
-		if err != nil {
-			c.Error(err)
-			return
-		}
-		responseSuccess(c, nil)
-	}
-}
 
 func handleGetUserTags(a *api.API) gin.HandlerFunc {
 	return func(c *gin.Context) {
